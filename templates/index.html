@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coimbatore Bazaar - Products</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+    <div class="container">
+        <h1 class="logo"><a href="{{ url_for('home') }}">Coimbatore Bazaar</a></h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home') }}">Shop</a></li>
+                <li><a href="{{ url_for('view_cart') }}">Cart</a></li>
+                <li><a href="{{ url_for('about') }}">About Us</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+                {% if session.get('logged_in') %}
+                    {% if session.get('is_admin') %}
+                        <li class="admin-link"><a href="{{ url_for('add_product') }}">Add Product</a></li>
+                    {% endif %}
+                    <li class="user-menu">
+                        <a href="{{ url_for('profile') }}">Hello, {{ session.get('username', 'User') }}</a>
+                        <div class="user-dropdown-content">
+                            <a href="{{ url_for('profile') }}">My Profile</a>
+                            <a href="{{ url_for('logout') }}">Logout</a>
+                        </div>
+                    </li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                    <li><a href="{{ url_for('register') }}" class="register-link">Register</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <ul class="flashes">
+            {% for category, message in messages %}
+              <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+
+        <h2>Explore Our Products</h2>
+
+        <div class="filter-controls">
+    <form action="{{ url_for('home') }}" method="GET" class="filter-form">
+        <div class="filter-group search-bar">
+            <input type="text" name="search_query" placeholder="Search products..." value="{{ search_query or '' }}">
+            <button type="submit" class="hidden-submit-btn">Search</button>
+        </div>
+
+        <div class="filter-group category-filter">
+            <label for="category-select">Category:</label>
+            <select id="category-select" name="category">
+                {% for cat in categories %}
+                    <option value="{{ cat }}" {% if cat == selected_category %}selected{% endif %}>
+                        {{ cat }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="filter-group price-range-filter">
+            <label for="min_price">Price Range:</label>
+            <input type="number" id="min_price" name="min_price" placeholder="Min" value="{{ min_price or '' }}" min="0" step="0.01">
+            <span>-</span>
+            <input type="number" id="max_price" name="max_price" placeholder="Max" value="{{ max_price or '' }}" min="0" step="0.01">
+        </div>
+
+        <div class="filter-actions">
+            <button type="submit" class="apply-filter-btn">Apply Filters</button>
+            <button type="button" class="reset-filter-btn" onclick="window.location.href = '/';">Reset Filters</button>
+        </div>
+    </form>
+</div>
+
+        <div class="product-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <a href="{{ url_for('product_detail', product_id=product._id) }}" class="product-image-link">
+                    <img src="{{ product.image_url }}" alt="{{ product.name }}">
+                </a>
+                <div class="product-info">
+                    <h3><a href="{{ url_for('product_detail', product_id=product._id) }}">{{ product.name }}</a></h3>
+                    <p class="category-tag">Category: <span>{{ product.get('category', 'Uncategorized') }}</span></p>
+                    <p class="price">₹{{ "%.2f"|format(product.price) }}</p>
+                    <form action="{{ url_for('add_to_cart', product_id=product._id) }}" method="POST">
+                        <input type="hidden" name="quantity" value="1"> {# Default to add 1 #}
+                        <button type="submit" class="add-to-cart-btn">Add to Cart</button>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+            <p class="no-products-message">No products found matching your criteria. Try adjusting your search or filters.</p>
+            {% endfor %}
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-nav-group">
+                <div class="footer-section">
+                    <h4>Shop</h4>
+                    <ul>
+                        <li><a href="{{ url_for('home') }}">All Products</a></li>
+                        <li><a href="{{ url_for('home', category='Audio') }}">Audio</a></li>
+                        <li><a href="{{ url_for('home', category='Smart Home') }}">Smart Home</a></li>
+                        <li><a href="{{ url_for('home', category='Wearables') }}">Wearables</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Customer Service</h4>
+                    <ul>
+                        <li><a href="{{ url_for('view_cart') }}">View Cart</a></li>
+                        <li><a href="{{ url_for('checkout') }}">Checkout</a></li>
+                        <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>About Us</h4>
+                    <ul>
+                        <li><a href="{{ url_for('about') }}">Our Story</a></li>
+                        <li><a href="#">Careers (Soon!)</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; {{ "2025" }} Coimbatore Bazaar. All rights reserved. </p>
+                <p class="intern-note">An intern's project built with Flask & MongoDB for learning web development.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

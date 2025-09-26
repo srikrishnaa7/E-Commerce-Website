@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Coimbatore Bazaar</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+    <div class="container">
+        <h1 class="logo"><a href="{{ url_for('home') }}">Coimbatore Bazaar</a></h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home') }}">Shop</a></li>
+                <li><a href="{{ url_for('view_cart') }}">Cart</a></li>
+                <li><a href="{{ url_for('about') }}">About Us</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+                {% if session.get('logged_in') %}
+                    {% if session.get('is_admin') %}
+                        <li class="admin-link"><a href="{{ url_for('add_product') }}">Add Product</a></li>
+                    {% endif %}
+                    <li class="user-menu">
+                        <a href="{{ url_for('profile') }}">Hello, {{ session.get('username', 'User') }}</a>
+                        <div class="user-dropdown-content">
+                            <a href="{{ url_for('profile') }}">My Profile</a>
+                            <a href="{{ url_for('logout') }}">Logout</a>
+                        </div>
+                    </li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                    <li><a href="{{ url_for('register') }}" class="register-link">Register</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</header>
+
+    <main class="container content-page">
+        <h2>Welcome, {{ user.username }}!</h2>
+
+        <div class="profile-details">
+            <p><strong>Username:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Member Since:</strong> {{ user.created_at.strftime('%Y-%m-%d') }}</p>
+            {% if user.is_admin %}
+                <p class="admin-status"><strong>Account Type:</strong> Administrator</p>
+            {% else %}
+                <p><strong>Account Type:</strong> Standard User</p>
+            {% endif %}
+        </div>
+
+        <h3>Your Past Orders</h3>
+        {% if user_orders %}
+            <div class="order-history-list">
+                {% for order in user_orders %}
+                    <div class="order-item-summary">
+                        <p class="order-date">Order Placed: {{ order.order_date.strftime('%Y-%m-%d %H:%M') }}</p>
+                        <p class="order-id">Order ID: {{ order._id }}</p>
+                        <p class="order-total">Total: ₹{{ "%.2f"|format(order.total_amount) }}</p>
+                        <p class="order-status">Status: <span class="status-{{ order.status | lower }}">{{ order.status }}</span></p>
+                        <div class="order-items-preview">
+                            Items:
+                            {% for item in order.order_items[:2] %} {# Show first 2 items directly #}
+                                {{ item.name }} ({{ item.quantity }}x){% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                            {% if order.order_items | length > 2 %}
+                                ... ({{ order.order_items | length - 2 }} more)
+                            {% endif %}
+                        </div>
+                        {# You could add a "View Details" button here to a new /order/<id> route #}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="no-orders-message">
+                <p>You haven't placed any orders yet. Time to explore our amazing products!</p>
+                <a href="{{ url_for('home') }}" class="button primary">Start Shopping</a>
+            </div>
+        {% endif %}
+
+        <p class="action-links">
+            <a href="{{ url_for('view_cart') }}" class="button primary">View My Cart</a>
+            <a href="{{ url_for('home') }}" class="button secondary">Continue Shopping</a>
+        </p>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-nav-group">
+                <div class="footer-section">
+                    <h4>Shop</h4>
+                    <ul>
+                        <li><a href="{{ url_for('home') }}">All Products</a></li>
+                        <li><a href="{{ url_for('home', category='Audio') }}">Audio</a></li>
+                        <li><a href="{{ url_for('home', category='Smart Home') }}">Smart Home</a></li>
+                        <li><a href="{{ url_for('home', category='Wearables') }}">Wearables</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Customer Service</h4>
+                    <ul>
+                        <li><a href="{{ url_for('view_cart') }}">View Cart</a></li>
+                        <li><a href="{{ url_for('checkout') }}">Checkout</a></li>
+                        <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>About Us</h4>
+                    <ul>
+                        <li><a href="{{ url_for('about') }}">Our Story</a></li>
+                        <li><a href="#">Careers (Soon!)</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; {{ "2025" }} Coimbatore Bazaar. All rights reserved. </p>
+                <p class="intern-note">An intern's project built with Flask & MongoDB for learning web development.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

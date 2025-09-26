@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Coimbatore Bazaar</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+    <div class="container">
+        <h1 class="logo"><a href="{{ url_for('home') }}">Coimbatore Bazaar</a></h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home') }}">Shop</a></li>
+                <li><a href="{{ url_for('view_cart') }}">Cart</a></li>
+                <li><a href="{{ url_for('about') }}">About Us</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+                {% if session.get('logged_in') %}
+                    {% if session.get('is_admin') %}
+                        <li class="admin-link"><a href="{{ url_for('add_product') }}">Add Product</a></li>
+                    {% endif %}
+                    <li class="user-menu">
+                        <a href="{{ url_for('profile') }}">Hello, {{ session.get('username', 'User') }}</a>
+                        <div class="user-dropdown-content">
+                            <a href="{{ url_for('profile') }}">My Profile</a>
+                            <a href="{{ url_for('logout') }}">Logout</a>
+                        </div>
+                    </li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                    <li><a href="{{ url_for('register') }}" class="register-link">Register</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</header>
+
+    <main class="container content-page">
+        <h2>About Coimbatore Bazaar</h2>
+        <p>Welcome to Coimbatore Bazaar, your one-stop online shop for the latest and greatest electronic gadgets! We are a passionate team dedicated to bringing you high-quality products at competitive prices, right here from the heart of Coimbatore.</p>
+
+        <p>Our mission is to provide a seamless and enjoyable shopping experience, offering everything from smart home devices and audio accessories to wearable tech and entertainment gadgets. We believe in innovation, customer satisfaction, and building a trusted community for tech enthusiasts.</p>
+
+        <h3>Our Vision</h3>
+        <p>To become the leading e-commerce platform for electronics in Coimbatore and beyond, known for our diverse product range, excellent customer service, and commitment to technological advancement.</p>
+
+        <p class="intern-note">This project was developed by an intern as a learning exercise to gain hands-on experience with Flask, MongoDB, and web development principles. It showcases core e-commerce functionalities like product display, categorization, shopping cart management, and basic CRUD operations. Feedback and suggestions are always welcome!</p>
+
+        <h3>Location</h3>
+        <p>Coimbatore, Tamil Nadu, India</p>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-nav-group">
+                <div class="footer-section">
+                    <h4>Shop</h4>
+                    <ul>
+                        <li><a href="{{ url_for('home') }}">All Products</a></li>
+                        <li><a href="{{ url_for('home', category='Audio') }}">Audio</a></li>
+                        <li><a href="{{ url_for('home', category='Smart Home') }}">Smart Home</a></li>
+                        <li><a href="{{ url_for('home', category='Wearables') }}">Wearables</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Customer Service</h4>
+                    <ul>
+                        <li><a href="{{ url_for('view_cart') }}">View Cart</a></li>
+                        <li><a href="{{ url_for('checkout') }}">Checkout</a></li>
+                        <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>About Us</h4>
+                    <ul>
+                        <li><a href="{{ url_for('about') }}">Our Story</a></li>
+                        <li><a href="#">Careers (Soon!)</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; {{ "2025" }} Coimbatore Bazaar. All rights reserved. </p>
+                <p class="intern-note">An intern's project built with Flask & MongoDB for learning web development.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

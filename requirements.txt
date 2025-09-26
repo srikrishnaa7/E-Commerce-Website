@@ -1,0 +1,7 @@
+Flask==2.3.2
+flask-pymongo==2.3.0
+python-dotenv==1.0.0
+dnspython==2.3.0
+pymongo==4.3.3
+gunicorn==21.2.0
+Werkzeug==2.3.6

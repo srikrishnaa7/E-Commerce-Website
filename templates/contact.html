@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Coimbatore Bazaar</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+    <div class="container">
+        <h1 class="logo"><a href="{{ url_for('home') }}">Coimbatore Bazaar</a></h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home') }}">Shop</a></li>
+                <li><a href="{{ url_for('view_cart') }}">Cart</a></li>
+                <li><a href="{{ url_for('about') }}">About Us</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+                {% if session.get('logged_in') %}
+                    {% if session.get('is_admin') %}
+                        <li class="admin-link"><a href="{{ url_for('add_product') }}">Add Product</a></li>
+                    {% endif %}
+                    <li class="user-menu">
+                        <a href="{{ url_for('profile') }}">Hello, {{ session.get('username', 'User') }}</a>
+                        <div class="user-dropdown-content">
+                            <a href="{{ url_for('profile') }}">My Profile</a>
+                            <a href="{{ url_for('logout') }}">Logout</a>
+                        </div>
+                    </li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                    <li><a href="{{ url_for('register') }}" class="register-link">Register</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</header>
+
+    <main class="container content-page">
+        <h2>Contact Us</h2>
+        <p>Have questions, feedback, or need assistance? We're here to help! Reach out to us through the following channels:</p>
+
+        <div class="contact-info">
+            <p><strong>Email:</strong> <a href="mailto:support@coimbatorebazaar.com">support@coimbatorebazaar.com</a></p>
+            <p><strong>Phone:</strong> +91 98765 43210</p>
+            <p><strong>Address:</strong><br>
+               Coimbatore Bazaar Headquarters<br>
+               123 Tech Avenue, Innovation District<br>
+               Coimbatore, Tamil Nadu, India - 641001</p>
+        </div>
+
+        <h3>Business Hours</h3>
+        <p>Monday - Friday: 9:00 AM - 6:00 PM (IST)</p>
+        <p>Saturday: 10:00 AM - 2:00 PM (IST)</p>
+        <p>Sunday: Closed</p>
+
+        <p class="intern-note">Please note: This is a simulated contact page for an intern project. For actual inquiries, please do not use the provided contact details.</p>
+
+        <p>We look forward to hearing from you!</p>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-nav-group">
+                <div class="footer-section">
+                    <h4>Shop</h4>
+                    <ul>
+                        <li><a href="{{ url_for('home') }}">All Products</a></li>
+                        <li><a href="{{ url_for('home', category='Audio') }}">Audio</a></li>
+                        <li><a href="{{ url_for('home', category='Smart Home') }}">Smart Home</a></li>
+                        <li><a href="{{ url_for('home', category='Wearables') }}">Wearables</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Customer Service</h4>
+                    <ul>
+                        <li><a href="{{ url_for('view_cart') }}">View Cart</a></li>
+                        <li><a href="{{ url_for('checkout') }}">Checkout</a></li>
+                        <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>About Us</h4>
+                    <ul>
+                        <li><a href="{{ url_for('about') }}">Our Story</a></li>
+                        <li><a href="#">Careers (Soon!)</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; {{ "2025" }} Coimbatore Bazaar. All rights reserved. </p>
+                <p class="intern-note">An intern's project built with Flask & MongoDB for learning web development.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
